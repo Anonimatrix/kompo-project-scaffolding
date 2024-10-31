@@ -1,6 +1,6 @@
 <?php
 
-const GENERIC_PACKAGE_NAME = 'generic-package-case';
+const GENERIC_PACKAGE_NAME = 'generic-package-name';
 
 function convertToCamelCase($string)
 {
@@ -18,7 +18,11 @@ if (!$packageName) {
 
 $packageNameCamelCase = convertToCamelCase($packageName);
 
-foreach (glob('./**/*.*') as $file) {
+foreach (array_merge(glob('./**/*.*'), glob('./*.*')) as $file) {
+    if ($file === './setPackageName.php') {
+        continue;
+    }
+
     $fileContent = file_get_contents($file);
 
     $fileContent = str_replace($genericNameCamelCase, $packageNameCamelCase, $fileContent);
@@ -27,7 +31,9 @@ foreach (glob('./**/*.*') as $file) {
     $fileNameChanged = str_replace(GENERIC_PACKAGE_NAME, $packageName, $file);
     $fileNameChanged = str_replace($genericNameCamelCase, $packageNameCamelCase, $fileNameChanged);
 
-    unlink($file);
-
     file_put_contents($fileNameChanged, $fileContent);
+
+    if ($file !== $fileNameChanged) {
+        unlink($file);
+    }
 }
