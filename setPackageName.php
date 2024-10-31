@@ -9,7 +9,7 @@ function convertToCamelCase($string)
 
 $genericNameCamelCase = convertToCamelCase(GENERIC_PACKAGE_NAME);
 
-$packageName = $argv[1];
+$packageName = $argv[1] ?? null;
 
 if (!$packageName) {
     echo "Please provide a package name\n";
